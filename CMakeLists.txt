@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(bitcraze_flow_breakout)
 
+SET(CMAKE_CXX_FLAGS "-std=c++11 -O3")
+
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -8,6 +10,7 @@ project(bitcraze_flow_breakout)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  roslaunch
   message_generation
 )
 
@@ -101,34 +104,16 @@ include_directories(
 
 )
 
-## Declare a C++ library
-#add_library(${PROJECT_NAME}
-#src/${PROJECT_NAME}/bitcraze_flow_breakout.cpp
-#)
 
-## Add cmake target dependencies of the library
-## as an example, code may need to be generated before libraries
-## either from message generation or dynamic reconfigure
-
-
-## Declare a C++ executable
-## With catkin_make all packages are built within a single CMake context
-## The recommended prefix ensures that target names across packages don't collide
 add_executable(flow_sensor_node src/flow_sensor.cpp)
 add_executable(tof_node src/tof.cpp)
 
+
 add_library(PMW3901 include/PMW3901/PMW3901.cpp)
-add_library(tof include/tof/tof.cpp)
 add_library(bcm2835 include/PMW3901/bcm2835.c)
+add_library(I2Cdev include/VL53L0X/I2Cdev.cpp)
+add_library(VL53L0X include/VL53L0X/VL53L0X.cpp)
 
-## Rename C++ executable without prefix
-## The above recommended prefix causes long target names, the following renames the
-## target back to the shorter version for ease of user use
-## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
-
-## Add cmake target dependencies of the executable
-## same as for the library above
  add_dependencies(flow_sensor_node bitcraze_flow_breakout_generate_messages_cpp)
  add_dependencies(tof_node bitcraze_flow_breakout_generate_messages_cpp)
 
@@ -136,11 +121,16 @@ add_library(bcm2835 include/PMW3901/bcm2835.c)
 target_link_libraries(PMW3901
   bcm2835
   )
+target_link_libraries(VL53L0X
+  I2Cdev
+ )
 target_link_libraries(flow_sensor_node
   ${catkin_LIBRARIES}
   PMW3901
 )
 target_link_libraries(tof_node
   ${catkin_LIBRARIES}
-  tof
+  VL53L0X
 )
+
+roslaunch_add_file_check(launch)

@@ -1,0 +1,4 @@
+<launch>
+  <node name="tof" pkg="bitcraze_flow_breakout" type="tof_node" />
+  <node name="flow_sensor" pkg="bitcraze_flow_breakout" type="flow_sensor_node" />
+</launch>
