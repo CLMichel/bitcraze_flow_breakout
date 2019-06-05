@@ -1,1 +1,2 @@
-string flow
+float64 deltaX
+float64 deltaY
