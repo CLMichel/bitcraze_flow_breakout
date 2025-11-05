@@ -1,4 +1,36 @@
 <launch>
-  <node name="tof" pkg="bitcraze_flow_breakout" type="tof_node" />
-  <node name="flow_sensor" pkg="bitcraze_flow_breakout" type="flow_sensor_node" />
+  <!-- Launch file for Bitcraze Flow Deck Breakout sensors -->
+
+  <!-- Arguments for configurable parameters -->
+  <arg name="flow_rate" default="10.0" />
+  <arg name="flow_topic" default="flow_sensor" />
+  <arg name="flow_frame_id" default="flow_sensor" />
+  <arg name="flow_spi_cs_pin" default="1" />
+
+  <arg name="tof_rate" default="10.0" />
+  <arg name="tof_topic" default="tof" />
+  <arg name="tof_frame_id" default="tof" />
+  <arg name="tof_timeout_ms" default="200" />
+  <arg name="tof_long_range" default="false" />
+  <arg name="tof_high_speed" default="false" />
+  <arg name="tof_high_accuracy" default="false" />
+
+  <!-- Flow sensor node (PMW3901) -->
+  <node name="flow_sensor" pkg="bitcraze_flow_breakout" type="flow_sensor_node" output="screen">
+    <param name="rate" value="$(arg flow_rate)" />
+    <param name="topic" value="$(arg flow_topic)" />
+    <param name="frame_id" value="$(arg flow_frame_id)" />
+    <param name="spi_cs_pin" value="$(arg flow_spi_cs_pin)" />
+  </node>
+
+  <!-- Time-of-Flight sensor node (VL53L0X) -->
+  <node name="tof" pkg="bitcraze_flow_breakout" type="tof_node" output="screen">
+    <param name="rate" value="$(arg tof_rate)" />
+    <param name="topic" value="$(arg tof_topic)" />
+    <param name="frame_id" value="$(arg tof_frame_id)" />
+    <param name="timeout_ms" value="$(arg tof_timeout_ms)" />
+    <param name="long_range" value="$(arg tof_long_range)" />
+    <param name="high_speed" value="$(arg tof_high_speed)" />
+    <param name="high_accuracy" value="$(arg tof_high_accuracy)" />
+  </node>
 </launch>

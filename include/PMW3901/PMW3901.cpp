@@ -179,5 +179,3 @@ registerRead(0x02);
 }
 
 PMW3901::PMW3901(uint8_t cs):m_cs(cs){}
-
-uint8_t m_cs;
